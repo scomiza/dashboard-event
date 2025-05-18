@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Team Activity Dashboard</title>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        h2 { margin-bottom: 0; }
+        .chart-container { margin-bottom: 50px; }
+    </style>
+</head>
+<body>
+    <h2>Tasks per Developer</h2>
+    <div id="tasksChart" class="chart-container" style="width:90%; height:400px;"></div>
+
+    <h2>Estimation Accuracy (Estimated vs Actual Time)</h2>
+    <div id="accuracyChart" class="chart-container" style="width:90%; height:400px;"></div>
+
+    <script>
+        fetch('date-jira.json')
+            .then(response => response.json())
+            .then(data => {
+                const taskCount = {};
+                const estimateAccuracy = {};
+
+                data.forEach(task => {
+                    const dev = task.assignee;
+                    const est = parseFloat(task.estimated_time || 0);
+                    const act = parseFloat(task.actual_time || 0);
+
+                    if (!taskCount[dev]) {
+                        taskCount[dev] = 0;
+                        estimateAccuracy[dev] = { est: 0, act: 0 };
+                    }
+                    taskCount[dev]++;
+                    estimateAccuracy[dev].est += est;
+                    estimateAccuracy[dev].act += act;
+                });
+
+                const taskSeries = Object.entries(taskCount).map(([name, y]) => ({ name, y }));
+
+                Highcharts.chart('tasksChart', {
+                    chart: { type: 'column' },
+                    title: { text: null },
+                    xAxis: { type: 'category' },
+                    yAxis: { title: { text: 'Number of Tasks' }},
+                    series: [{ name: 'Tasks', data: taskSeries }]
+                });
+
+                const categories = Object.keys(estimateAccuracy);
+                const estimated = categories.map(dev => estimateAccuracy[dev].est);
+                const actual = categories.map(dev => estimateAccuracy[dev].act);
+
+                Highcharts.chart('accuracyChart', {
+                    chart: { type: 'column' },
+                    title: { text: null },
+                    xAxis: { categories },
+                    yAxis: { min: 0, title: { text: 'Hours' }},
+                    legend: true,
+                    series: [
+                        { name: 'Estimated Time', data: estimated },
+                        { name: 'Actual Time', data: actual }
+                    ]
+                });
+            });
+    </script>
+</body>
+</html>

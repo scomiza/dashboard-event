@@ -1,0 +1,32 @@
+[
+  {
+    "title": "Implement login",
+    "type": "Feature",
+    "status": "Done",
+    "assignee": "Alice",
+    "estimated_time": "5",
+    "actual_time": "6",
+    "created": "2024-01-10",
+    "closed": "2024-01-12"
+  },
+  {
+    "title": "Fix signup bug",
+    "type": "Bug",
+    "status": "Done",
+    "assignee": "Bob",
+    "estimated_time": "3",
+    "actual_time": "2.5",
+    "created": "2024-01-11",
+    "closed": "2024-01-12"
+  },
+  {
+    "title": "Create dashboard",
+    "type": "Feature",
+    "status": "In Progress",
+    "assignee": "Alice",
+    "estimated_time": "8",
+    "actual_time": "4",
+    "created": "2024-01-13",
+    "closed": ""
+  }
+]
